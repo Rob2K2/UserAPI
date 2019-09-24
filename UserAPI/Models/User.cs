@@ -15,5 +15,6 @@ namespace UserAPI.Models
 
         public string NickName { get; set; }
 
+        public int TotalKudos { get; set; }
     }
 }

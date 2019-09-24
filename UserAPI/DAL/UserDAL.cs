@@ -18,7 +18,7 @@ namespace UserAPI.DAL
                 using (var con = Connection.ConexionMysql())
                 {
                     con.Open();
-                    var query = "SELECT  id userid, first_name firstname, last_name lastname, nickname " +
+                    var query = "SELECT  id userid, first_name firstname, last_name lastname, nickname, total_kudos totalkudos " +
                                 "FROM kudos_usuarios.kudos_users";
 
                     var cmd = new MySqlCommand(query, con);
@@ -32,7 +32,8 @@ namespace UserAPI.DAL
                                 UserID = Convert.ToInt32(dr["userid"]),
                                 FirstName = dr["firstname"].ToString(),
                                 LastName = dr["lastname"].ToString(),
-                                NickName = dr["nickname"].ToString()
+                                NickName = dr["nickname"].ToString(),
+                                TotalKudos = Convert.ToInt32(dr["totalkudos"])
                             };
                             users.Add(user);
                         }
@@ -55,7 +56,7 @@ namespace UserAPI.DAL
                 using (var con = Connection.ConexionMysql())
                 {
                     con.Open();
-                    var query = "SELECT  id userid, first_name firstname, last_name lastname, nickname " +
+                    var query = "SELECT  id userid, first_name firstname, last_name lastname, nickname, total_kudos totalkudos " +
                                 "FROM kudos_usuarios.kudos_users " +
                                 "WHERE id = ?";
 
@@ -71,6 +72,7 @@ namespace UserAPI.DAL
                             user.FirstName = dr["firstname"].ToString();
                             user.LastName = dr["lastname"].ToString();
                             user.NickName = dr["nickname"].ToString();
+                            user.TotalKudos = Convert.ToInt32(dr["totalkudos"]);
                         }
                     }
                 }
@@ -98,7 +100,7 @@ namespace UserAPI.DAL
                     cmd.Parameters.Add("@first_name", MySqlDbType.VarChar).Value = user.FirstName;
                     cmd.Parameters.Add("@last_name", MySqlDbType.VarChar).Value = user.LastName;
                     cmd.Parameters.Add("@nickname", MySqlDbType.VarChar).Value = user.NickName;
-                    
+
                     respuesta = Convert.ToBoolean(cmd.ExecuteNonQuery());
                 }
             }
@@ -161,6 +163,33 @@ namespace UserAPI.DAL
             {
                 throw ex;
             }
+            return respuesta;
+        }
+
+        public bool UpdateUserKudos(int id, int totalKudos)
+        {
+            bool respuesta = false;
+            try
+            {
+                using (var con = Connection.ConexionMysql())
+                {
+                    con.Open();
+                    var query = "UPDATE kudos_usuarios.kudos_users " +
+                                "SET total_kudos=? " +
+                                "WHERE id = ?";
+
+                    var cmd = new MySqlCommand(query, con);
+                    cmd.Parameters.Add("@total_kudos", MySqlDbType.Int16).Value = totalKudos;
+                    cmd.Parameters.Add("@id", MySqlDbType.Int16).Value = id;
+
+                    respuesta = Convert.ToBoolean(cmd.ExecuteNonQuery());
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
             return respuesta;
         }
     }

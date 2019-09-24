@@ -51,16 +51,22 @@ namespace UserAPI.Controllers
             return Ok(user);
         }
 
-        // PUT: api/User/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] User user)
+        [HttpPut("{option}")]
+        public IActionResult Put(string option, [FromBody] User user)
         {
-            if (user.UserID != id)
+            var userKudos = userDAL.ObtenerUsuario(user.UserID);
+            int totalKudos = userKudos.TotalKudos;
+
+            if (option == "add")
             {
-                return BadRequest();
+                totalKudos++;
+            }
+            else
+            {
+                totalKudos--;
             }
 
-            bool resultado = userDAL.ActualizarUsuario(user);
+            bool resultado = userDAL.UpdateUserKudos(user.UserID, totalKudos);
 
             if (!resultado)
             {
@@ -83,5 +89,23 @@ namespace UserAPI.Controllers
 
             return Ok();
         }
+
+        //[HttpPut("{id}")]
+        //public IActionResult Put(int id, [FromBody] User user)
+        //{
+        //    if (user.UserID != id)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    bool resultado = userDAL.ActualizarUsuario(user);
+
+        //    if (!resultado)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    return Ok();
+        //}
     }
 }
