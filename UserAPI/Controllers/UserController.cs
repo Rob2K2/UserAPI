@@ -51,30 +51,30 @@ namespace UserAPI.Controllers
             return Ok(user);
         }
 
-        [HttpPut("{option}")]
-        public IActionResult Put(string option, [FromBody] User user)
-        {
-            var userKudos = userDAL.ObtenerUsuario(user.UserID);
-            int totalKudos = userKudos.TotalKudos;
+        //[HttpPut("{option}")]
+        //public IActionResult Put(string option, [FromBody] User user)
+        //{
+        //    var userKudos = userDAL.ObtenerUsuario(user.UserID);
+        //    int totalKudos = userKudos.TotalKudos;
 
-            if (option == "add")
-            {
-                totalKudos++;
-            }
-            else
-            {
-                totalKudos--;
-            }
+        //    if (option == "add")
+        //    {
+        //        totalKudos++;
+        //    }
+        //    else
+        //    {
+        //        totalKudos--;
+        //    }
 
-            bool resultado = userDAL.UpdateUserKudos(user.UserID, totalKudos);
+        //    bool resultado = userDAL.UpdateUserKudos(user.UserID, totalKudos);
 
-            if (!resultado)
-            {
-                return BadRequest();
-            }
+        //    if (!resultado)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
