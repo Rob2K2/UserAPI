@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using UserAPI.DAL;
+using UserAPI.Interfaces.Services;
 using UserAPI.Models;
 
 namespace UserAPI.Controllers
@@ -14,6 +17,18 @@ namespace UserAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserDAL userDAL = new UserDAL();
+
+        private readonly IUserService _userService;
+        private readonly IBusControl _bus;
+        private readonly IConfiguration _config;
+
+        public UserController(IUserService userService, IBusControl bus, IConfiguration config)
+        {
+            _userService = userService;
+            _bus = bus;
+            _config = config;
+        }
+
 
         [HttpGet]
         public IEnumerable<User> Get()
@@ -38,17 +53,32 @@ namespace UserAPI.Controllers
         }
 
         // POST: api/User
+        //[HttpPost]
+        //public IActionResult Post([FromBody] User user)
+        //{
+        //    bool resultado = userDAL.CrearUsuario(user);
+
+        //    if (!resultado)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    return Ok(user);
+        //}
+
         [HttpPost]
-        public IActionResult Post([FromBody] User user)
+        public async Task<IActionResult> Post([FromBody] User user)
         {
-            bool resultado = userDAL.CrearUsuario(user);
+            //User res = await _userService.AddNewUser(user);
 
-            if (!resultado)
-            {
-                return BadRequest();
-            }
+            Uri uri = new Uri($"rabbitmq://localhost/create_user");
 
-            return Ok(user);
+            var endPoint = await _bus.GetSendEndpoint(uri);
+            await endPoint.Send(user);
+
+            return Ok();
+
+            //return Ok(Microservices.Services.Core.Models.Response<User>.Succeeded(user));
         }
 
         //[HttpPut("{option}")]

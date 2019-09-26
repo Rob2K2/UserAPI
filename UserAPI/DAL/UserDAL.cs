@@ -33,7 +33,7 @@ namespace UserAPI.DAL
                                 FirstName = dr["firstname"].ToString(),
                                 LastName = dr["lastname"].ToString(),
                                 NickName = dr["nickname"].ToString(),
-                                TotalKudos = Convert.ToInt32(dr["totalkudos"])
+                                //TotalKudos = Convert.ToInt32(dr["totalkudos"])
                             };
                             users.Add(user);
                         }
@@ -72,7 +72,7 @@ namespace UserAPI.DAL
                             user.FirstName = dr["firstname"].ToString();
                             user.LastName = dr["lastname"].ToString();
                             user.NickName = dr["nickname"].ToString();
-                            user.TotalKudos = Convert.ToInt32(dr["totalkudos"]);
+                            //user.TotalKudos = Convert.ToInt32(dr["totalkudos"]);
                         }
                     }
                 }
